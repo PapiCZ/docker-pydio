@@ -1,0 +1,33 @@
+version: "3"
+
+volumes:
+    application:
+
+networks:
+    web:
+        external: true
+    application:
+
+services:
+    nginx:
+        build:
+            context: ./
+            dockerfile: ./docker/nginx/Dockerfile
+        links:
+            - php-fpm
+        networks:
+            - application
+            - web
+        volumes:
+            - application:/var/www
+            - ./app:/var/www
+
+    php-fpm:
+        build:
+            context: ./
+            dockerfile: ./docker/php-fpm/Dockerfile
+        networks:
+            - application
+        volumes:
+            - application:/var/www
+            - ./app:/var/www
